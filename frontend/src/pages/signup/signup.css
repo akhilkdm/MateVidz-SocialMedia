@@ -1,0 +1,11 @@
+.link {
+    color: rgb(7, 7, 7);
+    text-decoration: none;
+  }
+  .link:hover {
+     color: #00F
+  }
+
+  small{
+    color: red;
+  }

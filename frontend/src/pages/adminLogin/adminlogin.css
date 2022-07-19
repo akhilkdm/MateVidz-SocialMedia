@@ -1,0 +1,17 @@
+.link {
+    color: rgb(7, 7, 7);
+    text-decoration: none;
+  }
+  .link:hover {
+     color: #00F
+  }
+
+
+  .button{
+    color:white;
+    background-color: black;
+  }
+.button:hover{
+        color: white;
+   
+}
