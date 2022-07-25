@@ -1,10 +1,16 @@
+import { MoreVert } from "@mui/icons-material";
 import {
+  Box,
   Button,
   Card,
   CardActionArea,
+  CardActions,
   CardContent,
+  CardHeader,
   CardMedia,
+  IconButton,
   TextField,
+  Typography,
 } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -23,12 +29,9 @@ function EditPost() {
   const users = localStorage.getItem("userInfo");
   const userdata = JSON.parse(users);
 
-  console.log("postid", postId);
-
-  console.log("data", userdata.user);
   const tok = sessionStorage.getItem("token");
   const token = JSON.parse(tok);
-  console.log("tok", token);
+
   useEffect(() => {
     const editpost = async () => {
       const config = {
@@ -37,9 +40,7 @@ function EditPost() {
           "auth-token": token,
         },
       };
-
       const res = await axios.get(`/posts/editpost/${postId}`);
-
       setPost(res.data);
       setDesc(res.data.desc);
     };
@@ -68,7 +69,7 @@ function EditPost() {
   const submitDelete = async () => {
     try {
       const ress = await axios.delete(`/posts/${postId}`);
-      navigate("/");
+      navigate("/"); 
     } catch (err) {
       console.log(err);
     }
@@ -76,48 +77,66 @@ function EditPost() {
 
   return (
     <>
-      <Navbar />
-      <div
-        style={{
-          display: "flex",
-          marginTop: 5,
-          alignItems: "center",
-          justifyContent: "center",
+      <div>
+        {" "}
+        <Navbar />
+      </div>
+
+      <Box
+        flex={4}
+        p={2}
+        sx={{
+          height: "400px",
+          flexGrow: 1,
+          margin: "30px auto",
+          maxWidth: "700px",
+          padding: "20px",
+          textAlingn: "center",
+          bodersolid: "5px",
         }}
       >
-        <Card sx={{ maxWidth: 345, marginTop: 10 }}>
-          <CardActionArea>
+        <Card>
+          {post.img && (
             <CardMedia
               component="img"
-              height="140"
-              image={PF + post.img}
-              alt="green iguana"
+              height="15%"
+              image={PF + post?.img}
+              alt="Paella dish"
             />
-            <CardContent>
-              <TextField
-                value={desc}
-                onChange={(e) => setDesc(e.target.value)}
-              ></TextField>
-              {/* <Typography variant="body2" color="text.secondary">
-            Lizards are a widespread group of squamate reptiles, with over 6,000
-            species, ranging across all continents except Antarctica
-          </Typography> */}
-            </CardContent>
+          )}
+          <CardContent>
+            <TextField
+              style={{ marginBottom: 10 }}
+              sx={{ width: "100%" }}
+              id="desc"
+              value={desc}
+              name="comments"
+              rows={3}
+              onChange={(e) => setDesc(e.target.value)}
+              variant="standard"
+            />
+          </CardContent>
+          <CardActions disableSpacing sx={{ justifyContent: "center" }}>
             <Button
-              onClick={() => submitPost()}
-              sx={{ marginLeft: 7, backgroundColor: "blue", color: "white" }}
+              variant="contained"
+              sx={{ bgcolor: "green" }}
+              onClick={submitPost}
             >
               Update
             </Button>
+
             <Button
-              onClick={() => submitDelete()}
-              sx={{ backgroundColor: "red", marginLeft: 2, color: "white" }}
+              variant="contained"
+              sx={{ bgcolor: "red", marginLeft: "15px" }}
+              onClick={submitDelete}
             >
               Delete
             </Button>
-          </CardActionArea>
+          </CardActions>
         </Card>
-      </div>
+      </Box>
+
+      {/* </div> */}
     </>
   );
 }

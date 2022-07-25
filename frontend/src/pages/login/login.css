@@ -15,3 +15,26 @@
         color: white;
    
 }
+
+
+
+
+.loginmain{
+  height: auto;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: 'jost', sans-serif;
+  background:linear-gradient(to bottom, #b1b1f9, #f1e7ef , #dad9f5) ;
+  position: relative;
+}
+
+
+
+
+
+ 

@@ -13,27 +13,29 @@ const createPost = async (req, res) => {
 };
 
 //edit post
-const editPost = async(req,res)=>{
-  console.log("poooooost",req.params.postId);
-  try{
-    const post = await Post.findOne({_id:req.params.postId})
-    res.status(200).json(post)
-  }catch(error){
-    res.status(500).json(error)
+const editPost = async (req, res) => {
+  try {
+    const post = await Post.findOne({ _id: req.params.postId });
+    res.status(200).json(post);
+  } catch (error) {
+    res.status(500).json(error);
   }
-}
+};
 
 //update post
 const updatePost = async (req, res) => {
-  console.log("body",req.body)
-  const {desc,postId} =req.body
+  const { desc, postId } = req.body;
   try {
-    const post = await Post.findByIdAndUpdate(postId,{
-      desc:desc
-    },{
-      new:true
-    });
-    res.status(200).json(post)
+    const post = await Post.findByIdAndUpdate(
+      postId,
+      {
+        desc: desc,
+      },
+      {
+        new: true,
+      }
+    );
+    res.status(200).json(post);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -41,13 +43,11 @@ const updatePost = async (req, res) => {
 
 //delete post
 const deletePost = async (req, res) => {
-  console.log("paramsId",req.params.id)
+  console.log("paramsId", req.params.id);
   try {
     const post = await Post.findById(req.params.id);
-   
-      await post.deleteOne();
-      res.status(200).json("Post Deleted");
-   
+    await post.deleteOne();
+    res.status(200).json("Post Deleted");
   } catch (err) {
     res.status(500).json(err);
   }
@@ -98,8 +98,9 @@ const timelinePost = async (req, res) => {
 //get user posts
 const userPost = async (req, res) => {
   try {
-    const user = await User.findOne({ username: req.params.username });
-    const posts = await Post.find({ userId: user._id });
+    // console.log("params",req.params.userId)
+    // const user = await User.findOne({ username: req.params.username });
+    const posts = await Post.find({ userId: req.params.userId });
     res.status(200).json(posts);
   } catch (err) {
     res.status(500).json(err);
@@ -142,5 +143,5 @@ module.exports = {
   timelinePost,
   userPost,
   comm,
-  editPost
+  editPost,
 };

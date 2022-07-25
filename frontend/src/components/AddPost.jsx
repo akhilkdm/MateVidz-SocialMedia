@@ -17,8 +17,9 @@ import { useSelector } from "react-redux";
 
 function AddPost({ fetchpost }) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-//   const userdata = useSelector((state) => state.user.value);
-//   console.log("state dtas", userdata.user.username);
+ 
+  const userdata = useSelector((state) => state?.userData?.value);
+  console.log("state dtas", userdata);
   const desc = useRef();
   const [file, setFile] = useState(null);
   const [img, setImg] = useState(null);
@@ -38,7 +39,7 @@ function AddPost({ fetchpost }) {
   const submitHandler = async (e) => {
     e.preventDefault();
     const newPost = {
-    //   userId: userdata.user._id,
+      userId: userdata._id,
       desc: desc.current.value,
     };
     setDescrip("");
@@ -50,7 +51,7 @@ function AddPost({ fetchpost }) {
       newPost.img = fileName;
       console.log(newPost);
       try {
-        await axios.post("/upload", data);
+        await axios.post("/upload", data); 
       } catch (err) {
         console.log(err);
       }
@@ -78,9 +79,9 @@ function AddPost({ fetchpost }) {
         </Typography> */}
         <form onSubmit={submitHandler}>
           <UserBox sx={{ marginLeft: 2 }}>
-            <Avatar />
+            <Avatar  src={PF+userdata.profilePicture} />
             <Typography variant="span" fontWeight={500}>
-              {/* {userdata.user.username} */}
+              {userdata.username}
             </Typography>
           </UserBox>
           {/* <CardMedia
@@ -97,7 +98,7 @@ function AddPost({ fetchpost }) {
                 multiline
                 rows={3}
                 placeholder={
-                  "Whats on your mind " +"?"
+                  "Whats on your mind "+userdata.username +"?"
                 }
                 variant="standard"
                 value={descrip}
@@ -117,8 +118,7 @@ function AddPost({ fetchpost }) {
                 type="file"
                 id="file"
                 accept=".png, .jpeg, .jpg"
-                // onChange={(e) =>
-                //   setFile(e.target.files[0])}
+               
                 onChange={onImageChange}
               />
             </label>

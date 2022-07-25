@@ -10,6 +10,7 @@ import {
 } from "@mui/icons-material";
 import {
   Avatar,
+  Box,
   Button,
   Card,
   CardActions,
@@ -18,6 +19,7 @@ import {
   CardMedia,
   Checkbox,
   IconButton,
+  Modal,
   TextField,
   Typography,
 } from "@mui/material";
@@ -30,30 +32,54 @@ import { useSelector } from "react-redux";
 const users = localStorage.getItem("userInfo");
 const currentUser = JSON.parse(users);
 
-function Post({ post }) {
-  const [user, setUser] = useState({});
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 300,
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  p: 4,
+  borderRadius: 10,
+};
+// const styles = theme => ({
+//   modalStyle1:{
+//     position:'absolute',
+//     top:'10%',
+//     left:'10%',
+//     overflow:'scroll',
+//     height:'100%',
+//     display:'block'
+//   }
+// });
+
+function Post({ post, h }) {
+  const [user, setUser] = useState("");
   const [like, setLike] = useState(post.likes.length);
   const [isLiked, setIsLiked] = useState(false);
   const PF = "http://localhost:8800/images/";
   const commentss = post.comments;
   const [comm, setComm] = useState(commentss);
-  const [val,setVal] = useState("");
-  const userdata = useSelector((state) => state);
-  
+  const [val, setVal] = useState("");
+  const userdata = useSelector((state) => state?.userData?.value);
 
-  
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   useEffect(() => {
-    setIsLiked(post.likes.includes(currentUser.user._id));
-  }, [currentUser?.user?._id, post.likes]);
+    setIsLiked(post.likes.includes(userdata?._id));
+  }, [userdata?._id, post.likes]);
 
   useEffect(() => {
     const fetchUser = async () => {
       const res = await axios.get(`/users/${post.userId}`);
+
       setUser(res.data);
     };
     fetchUser();
-  }, [post.userId]);
+  }, []);
 
   const likeHandler = async () => {
     try {
@@ -71,7 +97,7 @@ function Post({ post }) {
       const result = await axios.patch("/posts/comment", {
         postId,
         text,
-        username: currentUser.user.username,
+        username: userdata.username,
       });
       const results = result.data.comments;
       setComm(results);
@@ -80,22 +106,32 @@ function Post({ post }) {
     }
   };
 
-  console.log("commentssss", post.comments);
+  
+
   return (
     <Card sx={{ margin: 5 }}>
       <CardHeader
         avatar={
-          <Link to={`profile/${user.username}`}>
-            <Avatar src={user.profilePicture} aria-label="recipe"></Avatar>
-          </Link>
+          h ? (
+            <Link to={`profile/${user._id}`}>
+              <Avatar
+                src={PF + user.profilePicture}
+                aria-label="recipe"
+              ></Avatar>
+            </Link>
+          ) : (
+            <Avatar src={PF + user.profilePicture} aria-label="recipe"></Avatar>
+          )
         }
         action={
-          <Link to={`/editpost/${post._id}`}>
-            <IconButton aria-label="settings">
-              {currentUser.user.username && user.username && <Edit />}
-              {/* <MoreVert /> */}
-            </IconButton>
-          </Link>
+          userdata?.username === user?.username && (
+            <Link to={`/editpost/${post._id}`}>
+              <IconButton aria-label="settings">
+                <Edit />
+                {/* <MoreVert /> */}
+              </IconButton>
+            </Link>
+          )
         }
         title={user.username}
         subheader={format(post.createdAt)}
@@ -106,26 +142,28 @@ function Post({ post }) {
         </Typography>
       </CardContent>
 
-      <CardMedia
-        component="img"
-        height="20%"
-        image={PF + post.img}
-        alt="Paella dish"
-      />
+      {post.img && (
+        <CardMedia
+          component="img"
+          height="20%"
+          image={PF + post.img}
+          alt="Paella dish"
+        />
+      )}
 
       <CardActions disableSpacing>
         <IconButton aria-label="add to favorites">
           <Checkbox
             onClick={likeHandler}
             icon={
-              post.likes.includes(currentUser.user._id) ? (
+              post.likes.includes(userdata?._id) ? (
                 <Favorite sx={{ color: "red" }} />
               ) : (
                 <FavoriteBorder />
               )
             }
             checkedIcon={
-              post.likes.includes(currentUser.user._id) ? (
+              post.likes.includes(userdata?._id) ? (
                 <FavoriteBorder />
               ) : (
                 <Favorite sx={{ color: "red" }} />
@@ -134,35 +172,57 @@ function Post({ post }) {
           />
         </IconButton>
         <IconButton aria-label="comment">
-          <Comment />
-        </IconButton>
-        <span>{like} people liked</span>
-      </CardActions>
+          <Comment onClick={handleOpen} />
+          <Modal
+          
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <Typography id="modal-modal-title" variant="h6" component="h2">
+                Comments
+              </Typography>
+              {comm.map((record) => {
+                return (
+                  <h6>
+                    <span style={{ fontWeight: "400", fontSize: "15px" }}>
+                      {record.username}
+                    </span>{" "}
+                    <span>:</span>
+                    <span style={{ fontWeight: "400", fontSize: "15px" }}>
+                      {" "}
+                      {record.text}
+                    </span>
+                  </h6>
+                );
+              })}
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
 
-      <CardContent sx={{ marginBottom: 3 }}>
-        {comm.map((record) => {
-          return (
-            <h6>
-              <span style={{ fontWeight: "500" }}>{record.username}</span>{" "}
-              <span>:</span>
-              {record.text}
-            </h6>
-          );
-        })}
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            console.log("length",e.target[0].value.length);
-            if (e.target[0].value.length > 0 ) {
-              makeComment(e.target[0].value, post._id);
-              setVal("")
-            }
-          }}
-        >
-          <TextField id="standard-basic" value={val} onChange={(e)=>setVal(e.target.value)} label="Comments" variant="standard" />
-          <Send type="submit" sx={{ marginTop: 2, marginLeft: 2 }} />
-        </form>
-      </CardContent>
+                  if (e.target[0].value.length > 0) {
+                    makeComment(e.target[0].value, post._id);
+                    setVal("");
+                  }
+                }}
+              >
+                <TextField
+                  id="standard-basic"
+                  value={val}
+                  onChange={(e) => setVal(e.target.value)}
+                  label="Add your Comment"
+                  variant="standard"
+                />
+              </form>
+            </Box>
+          </Modal>
+        </IconButton>
+      </CardActions>
+      <Typography style={{ marginLeft: "15px", marginBottom: "10px" }}>
+        {like} people liked
+      </Typography>
     </Card>
   );
 }

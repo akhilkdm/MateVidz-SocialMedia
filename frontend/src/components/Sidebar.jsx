@@ -1,4 +1,4 @@
-import { Home, ModeNight } from "@mui/icons-material";
+import { Chat, Home, ModeNight } from "@mui/icons-material";
 import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Switch } from "@mui/material";
 import React from "react";
 
@@ -12,9 +12,9 @@ function Sidebar({mode,setMode}) {
         <ListItem disablePadding>
           <ListItemButton component="a" href="#home">
             <ListItemIcon>
-             <Home/>
+             <Chat/>
             </ListItemIcon>
-            <ListItemText primary="Homepage" />
+            <ListItemText primary="Chats" />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>

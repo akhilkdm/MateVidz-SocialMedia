@@ -9,6 +9,7 @@ import { Box, createTheme, Stack, ThemeProvider } from "@mui/material";
 import {useDispatch,useSelector} from "react-redux"
 import AddPost from '../../components/AddPost'
 
+
 function Home() {
 
  
@@ -29,8 +30,9 @@ function Home() {
         <Stack direction="row" spacing={2} justifyContent="space-between">
       
           <Sidebar setMode={setMode} mode={mode}/>
-          <Feed />
+          <Feed home />
           <Rightbar />
+        
         </Stack>
         <Add />
       </Box>

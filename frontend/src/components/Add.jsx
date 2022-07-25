@@ -45,7 +45,7 @@ function Add() {
   const [open, setOpen] = useState(false);
   const desc =useRef();
  
-  const [file,setFile] = useState(null);
+  const [file,setFile] = useState('');
 
   const submitHandler = async(e) =>{
     e.preventDefault()
@@ -53,7 +53,7 @@ function Add() {
       userId:currentUser.user._id,
       desc:desc.current.value  
     }
-   
+   console.log("filess",file);
     if(file){
       const data= new FormData();
       const fileName = Date.now() + file.name;
@@ -131,12 +131,13 @@ function Add() {
             />
             <Stack direction="row" gap={1} mt={2} mb={3}>
               <EmojiEmotions />
-              <label htmlFor="file" style={{cursor:"pointer"}}>
-              <Image  color="secondary"  /></label>
-              <VideoCameraBack color="success" />
-              <PersonAdd color="error" />
+              <label htmlFor="filee" style={{cursor:"pointer"}}>
+              <Image  color="secondary"  />
+             
+            {/* <input style={{display:"none"}} type="file" id="file" accept=".png,.jpeg,.jpg" onChange={(event)=>console.log("hellooo",event.target.files)} /> */}
+            <input style={{display:"none"}}  type="file" id="filee" onChange={(e)=>setFile(e.target.files[0])} />
+            </label>
             </Stack>
-            <input style={{display:"none"}} type="file" id="file" accept=".png,.jpeg,.jpg" onChange={(e)=>setFile(e.target.files[0])} />
             <ButtonGroup
               fullWidth
               variant="contained"

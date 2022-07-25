@@ -36,9 +36,9 @@ router.route("/comment").patch(comm);
 router.route("/:id").get(getPost);
 
 //get timeline posts
-router.route("/timeline/:userId").get(verifyToken,timelinePost);
+router.route("/timeline/:userId").get(timelinePost);
 
 //get user posts
-router.route("/profile/:username").get(userPost);
+router.route("/profile/:userId").get(userPost);
 
 module.exports = router;

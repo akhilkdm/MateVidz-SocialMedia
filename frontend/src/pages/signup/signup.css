@@ -9,3 +9,8 @@
   small{
     color: red;
   }
+
+  .sig{
+    background-color: #000000;
+    background-image: linear-gradient(315deg, #000000 0%, #958e69 74%);
+  }
