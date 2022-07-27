@@ -63,7 +63,7 @@ function Navbar() {
   return (
     <AppBar position="sticky" sx={{ bgcolor: "black" }}>
       <StyledToolbar>
-        <Link to={"/"}>
+        <Link style={{textDecoration:"none"}} to={"/"}>
           <Typography
             variant="h6"
             sx={{ display: { xs: "none", sm: "block" } }}

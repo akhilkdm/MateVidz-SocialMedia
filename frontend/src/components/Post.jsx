@@ -28,6 +28,7 @@ import { useState } from "react";
 import { format } from "timeago.js";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useRef } from "react";
 
 const users = localStorage.getItem("userInfo");
 const currentUser = JSON.parse(users);
@@ -43,16 +44,6 @@ const style = {
   p: 4,
   borderRadius: 10,
 };
-// const styles = theme => ({
-//   modalStyle1:{
-//     position:'absolute',
-//     top:'10%',
-//     left:'10%',
-//     overflow:'scroll',
-//     height:'100%',
-//     display:'block'
-//   }
-// });
 
 function Post({ post, h }) {
   const [user, setUser] = useState("");
@@ -63,6 +54,7 @@ function Post({ post, h }) {
   const [comm, setComm] = useState(commentss);
   const [val, setVal] = useState("");
   const userdata = useSelector((state) => state?.userData?.value);
+  const scrollRef = useRef();
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -105,8 +97,6 @@ function Post({ post, h }) {
       console.log("error", err);
     }
   };
-
-  
 
   return (
     <Card sx={{ margin: 5 }}>
@@ -174,7 +164,6 @@ function Post({ post, h }) {
         <IconButton aria-label="comment">
           <Comment onClick={handleOpen} />
           <Modal
-          
             open={open}
             onClose={handleClose}
             aria-labelledby="modal-modal-title"
@@ -184,20 +173,23 @@ function Post({ post, h }) {
               <Typography id="modal-modal-title" variant="h6" component="h2">
                 Comments
               </Typography>
-              {comm.map((record) => {
-                return (
-                  <h6>
-                    <span style={{ fontWeight: "400", fontSize: "15px" }}>
-                      {record.username}
-                    </span>{" "}
-                    <span>:</span>
-                    <span style={{ fontWeight: "400", fontSize: "15px" }}>
-                      {" "}
-                      {record.text}
-                    </span>
-                  </h6>
-                );
-              })}
+              <div style={{ height: 200, overflowY:"scroll"}}>
+                {comm.map((record) => {
+                  return (
+                    <h6>
+                      <span style={{ fontWeight: "400", fontSize: "15px" }}>
+                        {record.username}
+                      </span>{" "}
+                      <span>:</span>
+                      <span style={{ fontWeight: "400", fontSize: "15px" }}>
+                        {" "}
+                        {record.text}
+                      </span>
+                    </h6>
+                  );
+                  // </div>
+                })}
+              </div>
               <form
                 onSubmit={(e) => {
                   e.preventDefault();

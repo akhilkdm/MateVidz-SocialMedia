@@ -63,41 +63,42 @@ export default function EditProfile() {
 
   const userr = useSelector((state) => state.userData.value);
   const userId = useParams().id;
- 
 
   useEffect(() => {
     const getUser = async () => {
       const resps = await axios.get(`/users/${userId}`);
- 
+
       setUsername(resps?.data?.username);
     };
     getUser();
   }, []);
 
   const editProfile = async () => {
-    
-    await axios.put(`/users/updateusername/${userId}`, {
-      username,
-      userId,
-    }).then((resp)=>{
+    await axios
+      .put(`/users/updateusername/${userId}`, {
+        username,
+        userId,
+      })
+      .then((resp) => {
         toast("Name updated");
-        console.log("repsodneee",resp);
-    });
+        console.log("repsodneee", resp);
+      });
   };
-
 
   const changePassword = async () => {
     console.log("pass");
     if (newpassword === confirmpassword) {
-      await axios.put("/users/updatepassword", {
-        currentpassword,
-        newpassword,
-        userId,
-      }).then((res)=>{
-        toast("Password changed")
-      })
-    }else{
-        toast("Passwords not matching")
+      await axios
+        .put("/users/updatepassword", {
+          currentpassword,
+          newpassword,
+          userId,
+        })
+        .then((res) => {
+          toast("Password changed");
+        });
+    } else {
+      toast("Passwords not matching");
     }
   };
 
@@ -153,7 +154,7 @@ export default function EditProfile() {
             <button className="btn" onClick={editProfile}>
               Update
             </button>
-            <ToastContainer/>
+            <ToastContainer />
           </TabPanel>
 
           <Paper
@@ -207,7 +208,7 @@ export default function EditProfile() {
               <button className="btn" onClick={changePassword}>
                 Update
               </button>
-              <ToastContainer/>
+              <ToastContainer />
             </TabPanel>
           </Paper>
         </Box>
