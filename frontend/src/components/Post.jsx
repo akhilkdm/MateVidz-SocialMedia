@@ -5,8 +5,7 @@ import {
   Favorite,
   FavoriteBorder,
   MoreVert,
-  Send,
-  Share,
+
 } from "@mui/icons-material";
 import {
   Avatar,
@@ -19,6 +18,8 @@ import {
   CardMedia,
   Checkbox,
   IconButton,
+  Menu,
+  MenuItem,
   Modal,
   TextField,
   Typography,
@@ -28,7 +29,7 @@ import { useState } from "react";
 import { format } from "timeago.js";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useRef } from "react";
+import { toast, ToastContainer } from "react-toastify";
 
 const users = localStorage.getItem("userInfo");
 const currentUser = JSON.parse(users);
@@ -54,7 +55,15 @@ function Post({ post, h }) {
   const [comm, setComm] = useState(commentss);
   const [val, setVal] = useState("");
   const userdata = useSelector((state) => state?.userData?.value);
-  const scrollRef = useRef();
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const opens = Boolean(anchorEl);
+  const handleClicks = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloses = () => {
+    setAnchorEl(null);
+  };
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -66,7 +75,7 @@ function Post({ post, h }) {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await axios.get(`/users/${post.userId}`);
+      const res = await axios.get(`/users/${post?.userId}`);
 
       setUser(res.data);
     };
@@ -98,7 +107,23 @@ function Post({ post, h }) {
     }
   };
 
+  //report section
+  const handleReport= async()=>{
+    console.log("hell")
+    try {
+      console.log("hii")
+       const res=await axios.put("/posts/report/" + post._id , {
+        userId: currentUser.user._id,
+      });
+      console.log(res)
+      toast(res.data)
+    } catch (err) {
+      toast(err.response.data)
+    }
+  }
+
   return (
+    
     <Card sx={{ margin: 5 }}>
       <CardHeader
         avatar={
@@ -114,18 +139,42 @@ function Post({ post, h }) {
           )
         }
         action={
-          userdata?.username === user?.username && (
-            <Link to={`/editpost/${post._id}`}>
-              <IconButton aria-label="settings">
-                <Edit />
-                {/* <MoreVert /> */}
-              </IconButton>
-            </Link>
-          )
+
+          <div>
+            <Button
+              id="basic-button"
+              aria-controls={opens ? "basic-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={opens ? "true" : undefined}
+              onClick={handleClicks}
+            >
+              <MoreVert />
+            </Button>
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={opens}
+              onClose={handleCloses}
+              MenuListProps={{
+                "aria-labelledby": "basic-button",
+              }}
+            >
+              {userdata?.username === user?.username && (
+                <Link to={`/editpost/${post._id}`}  sx={{textDecoration:"none"}}>
+                  <IconButton aria-label="settings">
+                    <MenuItem sx={{textDecoration:"none"}} onClick={handleCloses}><Button>Edit</Button></MenuItem>
+                  </IconButton>
+                </Link>
+              )}
+
+              <MenuItem onClick={handleCloses}><Button onClick={handleReport}>Report</Button></MenuItem>
+            </Menu>
+          </div>
         }
         title={user.username}
         subheader={format(post.createdAt)}
       />
+      <ToastContainer/>
       <CardContent>
         <Typography variant="body2" color="text.secondary">
           {post.desc}
@@ -173,7 +222,7 @@ function Post({ post, h }) {
               <Typography id="modal-modal-title" variant="h6" component="h2">
                 Comments
               </Typography>
-              <div style={{ height: 200, overflowY:"scroll"}}>
+              <div style={{ height: 200, overflowY: "scroll" }}>
                 {comm.map((record) => {
                   return (
                     <h6>

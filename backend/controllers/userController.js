@@ -141,7 +141,7 @@ const deleteUser = async (req, res) => {
 //get user
 const getUser = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(req.params?.id);
     const { password, updatedAt, ...other } = user._doc;
 
     res.status(200).json(other);
@@ -153,7 +153,7 @@ const getUser = async (req, res) => {
 //get friends
 const getFriends = async (req, res) => {
   try {
-    const user = await User.findById(req.params.userId);
+    const user = await User.findById(req.params?.userId);
     const friends = await Promise.all(
       user.following.map((friendId) => {
         return User.findById(friendId);
@@ -217,8 +217,7 @@ const unfollow = async (req, res) => {
 
 //new users
 const newUser = async (req, res) => {
-console.log("params",req.params)
-  const currentUser = await User.findById(req.params.id);
+  const currentUser = await User.findById(req?.params?.id);
   console.log("cuurent user",currentUser);
   const friends = await Promise.all(
     currentUser.following.map((friendId) => {

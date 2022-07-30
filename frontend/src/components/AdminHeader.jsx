@@ -7,9 +7,12 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { adminLogIn } from "../Redux/Slices/admindata";
 
 export default function AdminHeader() {
   const admin = localStorage.getItem("adminInfo");
+  const dispatch = useDispatch();
 
   const json = JSON.parse(admin);
 
@@ -17,6 +20,7 @@ export default function AdminHeader() {
 
   const logout=()=>{
     localStorage.removeItem("adminInfo");
+    dispatch(adminLogIn(""));
     navigate("/adminlogin")
   }
   return (

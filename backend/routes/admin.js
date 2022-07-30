@@ -1,4 +1,4 @@
-const { getAllusers, editUser, getUser, blockUser, unblockUser } = require('../controllers/adminController');
+const { getAllusers, editUser, getUser, blockUser, unblockUser, reportedPost, deletePost, deletePosts } = require('../controllers/adminController');
 
 const router= require('express').Router();
 
@@ -13,6 +13,13 @@ router.route("/blockuser/:userId").patch(blockUser)
 
 //unblock user
 router.route("/unblockuser/:userId").patch(unblockUser) 
+
+//reported posts
+router.route("/reportedposts").get(reportedPost);
+
+//delete Posts
+router.route("/deletepost/:postId").delete(deletePosts)
+
 
 
 

@@ -72,7 +72,7 @@ const likePost = async (req, res) => {
 //get a post
 const getPost = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id);
+    const post = await Post.findById(req?.params?.id);
     res.status(200).json(post);
   } catch (err) {
     res.status(500).json(err);
@@ -82,8 +82,8 @@ const getPost = async (req, res) => {
 //get timeline posts
 const timelinePost = async (req, res) => {
   try {
-    const currentUser = await User.findById(req.params.userId);
-    const userPosts = await Post.find({ userId: currentUser._id });
+    const currentUser = await User.findById(req?.params?.userId);
+    const userPosts = await Post.find({ userId: currentUser?._id });
     const friendPosts = await Promise.all(
       currentUser.following.map((friendId) => {
         return Post.find({ userId: friendId });
@@ -100,7 +100,7 @@ const userPost = async (req, res) => {
   try {
     // console.log("params",req.params.userId)
     // const user = await User.findOne({ username: req.params.username });
-    const posts = await Post.find({ userId: req.params.userId });
+    const posts = await Post.find({ userId: req?.params?.userId });
     res.status(200).json(posts);
   } catch (err) {
     res.status(500).json(err);
@@ -134,6 +134,23 @@ const comm = async (req, res) => {
     });
 };
 
+//report the post
+const reportPost = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post.reports.includes(req.body.userId)) {
+      await post.updateOne({ $push: { reports: req.body.userId } });
+      res.status(200).json("This post has been reported");
+      console.log("post",post);
+    } else {
+      res.status(200).json("This post has been already reported");
+      console.log("reported post",post)
+    }
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
+
 module.exports = {
   createPost,
   updatePost,
@@ -144,4 +161,5 @@ module.exports = {
   userPost,
   comm,
   editPost,
+  reportPost
 };

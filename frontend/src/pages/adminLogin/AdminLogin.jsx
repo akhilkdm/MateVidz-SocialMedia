@@ -14,17 +14,14 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from "react";
 import { useRef } from "react";
-// import { loginCall } from "../../apiCalls";
-import { useContext } from "react";
-import { AuthContext } from "../../context/AuthContext";
-import { CircularProgress } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-// import {useForm} from "react-hook-form";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Animation } from "@mui/icons-material";
 import "./adminlogin.css";
+import { useDispatch } from "react-redux";
+import { adminLogIn } from "../../Redux/Slices/admindata";
 
 // const theme = createTheme();
 
@@ -36,6 +33,7 @@ export default function AdminLogin() {
   const password = useRef();
   const navigate = useNavigate();
   const [errr, setErrr] = useState();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -53,6 +51,7 @@ export default function AdminLogin() {
       navigate("/admin");
       localStorage.setItem("adminInfo", JSON.stringify(adminCredential));
       toast("Successfully Logged In");
+      dispatch(adminLogIn(adminCredential))
     } else {
       toast("Invalid username or password");
     }

@@ -18,36 +18,27 @@ import AdminHome from "./pages/AdminHome/AdminHome";
 import { useSelector } from "react-redux";
 import EditProfile from "./pages/EditProfile/EditProfile";
 import Messenger from "./pages/messenger/Messenger";
+import AdminRepotedPosts from "./pages/AdminRepotedPosts/AdminRepotedPosts";
 
 function Router() {
-  // const navigate = useNavigate();
-  // useEffect(() => {
-  //   const user = localStorage.getItem("userInfo");
-
-  //   if (user) {
-  //     navigate("/");
-  //   }else{
-  //     navigate('/login')
-  //   }
-  // }, []);
-
-  const users = useSelector((state)=>state.userData.value);
-
-  const user = localStorage.getItem("userInfo");
-  const admin = localStorage.getItem("adminInfo");
+  const users = useSelector((state) => state.userData.value);
+  const admin = useSelector((state) => state.adminData.value);
 
   return (
     <Routes>
       <Route path="/" element={users ? <Home /> : <Login />}></Route>
       <Route path="/login" element={users ? <Home /> : <Login />}></Route>
       <Route path="/signup" element={users ? <Home /> : <SignUp />}></Route>
-      <Route path="/profile/:id" element={users ? <Profile /> : <Login />}></Route>
+      <Route
+        path="/profile/:id"
+        element={users ? <Profile /> : <Login />}
+      ></Route>
       <Route
         path="/editpost/:postId"
-        element={user ? <EditPost /> : <Login />}
+        element={users ? <EditPost /> : <Login />}
       ></Route>
-      <Route path="/editprofile/:id" element={[<EditProfile/>]} ></Route>
-      <Route path="/messenger" element={<Messenger/>}></Route>
+      <Route path="/editprofile/:id" element={[<EditProfile />]}></Route>
+      <Route path="/messenger" element={<Messenger />}></Route>
 
       <Route
         path="/adminlogin"
@@ -65,6 +56,12 @@ function Router() {
       <Route
         path="/admin/unblock/:userId"
         element={admin ? [<AdminHeader />, <AdminHome />] : <AdminLogin />}
+      ></Route>
+      <Route
+        path="/admin/reportedposts"
+        element={
+          admin ? [<AdminHeader />, <AdminRepotedPosts />] : <AdminLogin />
+        }
       ></Route>
     </Routes>
   );

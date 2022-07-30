@@ -18,6 +18,11 @@ const PostSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
+    reports:{
+      type: Array,
+      default: [],
+    
+    },
     comments:[{
       text:String,
       postedBy:{type:ObjectId, ref:"User"},

@@ -24,6 +24,7 @@ export default function UserTable() {
     useEffect(() => {
       const fetchUser = async () => {
         const { data } = await axios.get("/admin");
+        console.log(data)
         setuserDetails(data);
         setfilterValue(data);
       };

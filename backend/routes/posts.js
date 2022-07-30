@@ -9,6 +9,7 @@ const {
   userPost,
   comm,
   editPost,
+  reportPost,
 } = require("../controllers/postController");
 const Post = require("../models/Post");
 const User = require("../models/User");
@@ -40,5 +41,8 @@ router.route("/timeline/:userId").get(timelinePost);
 
 //get user posts
 router.route("/profile/:userId").get(userPost);
+
+//report posts
+router.route("/report/:id").put(reportPost);
 
 module.exports = router;
